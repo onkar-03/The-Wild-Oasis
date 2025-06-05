@@ -1,0 +1,54 @@
+# IDE/editor folders
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ----------------------
+# Node & NPM/Yarn files
+# ----------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# ----------------------
+# Build / Dist
+# ----------------------
+dist/
+build/
+.next/
+out/
+.cache/
+temp/
+tmp/
+
+# ----------------------
+# Environment Variables
+# ----------------------
+.env
+.env.*
+!.env.example
+
+# ----------------------
+# Logs
+# ----------------------
+logs/
+*.log
+
+# ----------------------
+# Others
+# ----------------------
+*.local
+*.swp
+*.zip
+*.tgz
+*.gz
+*.bak
+*.tmp
