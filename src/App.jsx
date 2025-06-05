@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import GlobalStyles from './styles/GlobalStyles.js';
 import Button from './ui/Button.jsx';
 import Input from './ui/Input.jsx';
+import Heading from './ui/Heading.jsx';
+import Row from './ui/Row.jsx';
 
 // H1 styled component for the heading
 const H1 = styled.h1`
@@ -11,7 +13,7 @@ const H1 = styled.h1`
 
 // Styled component for the main app container
 const StyledApp = styled.div`
-  background-color: orangered;
+  /* background-color: orangered;s */
   padding: 20px;
 `;
 
@@ -20,10 +22,35 @@ function App() {
     <>
       <GlobalStyles />
       <StyledApp>
-        <H1>Wild Oasis</H1>
-        <Button onClick={() => alert('Check In!!')}>Check In</Button>
-        <Button onClick={() => alert('Check Out!!')}>Check Out</Button>
-        <Input type='text' placeholder='Enter your name' />
+        <Row type='horizontal'>
+          <Heading as='h1'>Wild Oasis</Heading>
+          <div>
+            <Heading as='h2'>Check In & Out</Heading>
+            <Button
+              variation='primary'
+              size='medium'
+              onClick={() => alert('Check In!!')}
+            >
+              Check In
+            </Button>
+            <Button
+              variation='secondary'
+              size='small'
+              onClick={() => alert('Check Out!!')}
+            >
+              Check Out
+            </Button>
+          </div>
+        </Row>
+
+        {/* Didnt give type 'vertical' as its already set as defualt prop in Row Styled Component Props */}
+        <Row>
+          <Heading as='h3'>Form</Heading>
+          <form>
+            <Input type='text' placeholder='Enter your name' />
+            <Input type='text' placeholder='Enter your name' />
+          </form>
+        </Row>
       </StyledApp>
     </>
   );
