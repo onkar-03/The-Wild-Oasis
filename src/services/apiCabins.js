@@ -6,7 +6,15 @@ export async function getCabins() {
   const { data, error } = await supabase.from('cabins').select('*');
 
   if (error) {
-    alert('Error fetching cabins: ' + error.message);
+    alert('Error fetching cabins !!');
   }
   return data;
+}
+
+export async function deleteCabin(id) {
+  const { data, error } = await supabase.from('cabins').delete().eq('id', id);
+
+  if (error) {
+    alert('Cabin could not be deleted !!');
+  }
 }
