@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { formatCurrency } from '../../utils/helpers.js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteCabin } from '../../services/apiCabins.js';
+import toast from 'react-hot-toast';
 
 const TableRow = styled.div`
   display: grid;
@@ -69,12 +70,11 @@ function CabinRow({ cabin }) {
       });
 
       // Optionally, you can show a success message
-      console.log('Cabin deleted successfully');
+      toast.success('Cabin deleted successfully');
     },
     onError: (error) => {
       // Handle error case
-      console.error('Error deleting cabin:', error);
-      alert('Cabin could not be deleted!');
+      toast.error(`${error.message}`);
     },
   });
 
