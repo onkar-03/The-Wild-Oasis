@@ -1,8 +1,9 @@
 import Form from '../../ui/Form.jsx';
 import FormRow from '../../ui/FormRow.jsx';
 import Input from '../../ui/Input.jsx';
-import { useSettings } from './useSettings.js';
 import Spinner from '../../ui/Spinner.jsx';
+
+import { useSettings } from './useSettings.js';
 import { useUpdateSetting } from './useUpdateSetting.js';
 import { updateSetting } from '../../services/apiSettings.js';
 
@@ -17,7 +18,7 @@ function UpdateSettingsForm() {
     } = {},
   } = useSettings();
 
-  const { isUpdating, updateSrettings } = useUpdateSetting();
+  const { isUpdating, updateSetting } = useUpdateSetting();
 
   if (isLoading) {
     <Spinner />;
@@ -44,6 +45,7 @@ function UpdateSettingsForm() {
           onBlur={(e) => handleUpdate(e, 'minBookingLength')}
         />
       </FormRow>
+
       <FormRow label='Maximum nights/booking'>
         <Input
           type='number'
@@ -53,6 +55,7 @@ function UpdateSettingsForm() {
           onBlur={(e) => handleUpdate(e, 'maxBookingLength')}
         />
       </FormRow>
+
       <FormRow label='Maximum guests/booking'>
         <Input
           type='number'
@@ -62,6 +65,7 @@ function UpdateSettingsForm() {
           onBlur={(e) => handleUpdate(e, 'maxGuestsPerBooking')}
         />
       </FormRow>
+
       <FormRow label='Breakfast price'>
         <Input
           type='number'
