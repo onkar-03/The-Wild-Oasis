@@ -1,6 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-const FileInput = styled.input`
+// as we want an image file hence we set the atttriibute of type as file
+const FileInput = styled.input.attrs({ type: 'file' })`
   font-size: 1.4rem;
   border-radius: var(--border-radius-sm);
 

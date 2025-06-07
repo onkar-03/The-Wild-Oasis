@@ -73,7 +73,10 @@ function CreateCabinForm() {
 
   // onSubmit function to handle form submission and pass data to mutation for cabin creation
   const onSubmit = function (data) {
-    mutate(data);
+    console.log(data);
+
+    // Assuming image is a FileList, we take the first file
+    mutate({ ...data, image: data.image[0] });
   };
 
   const onError = function (errors) {
@@ -159,7 +162,13 @@ function CreateCabinForm() {
       </FormRow>
 
       <FormRow label='Cabin Photo'>
-        <FileInput id='image' accept='image/*' />
+        <FileInput
+          id='image'
+          accept='image/*'
+          {...register('image', {
+            required: 'This Field is required',
+          })}
+        />
       </FormRow>
 
       <FormRow>
