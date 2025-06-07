@@ -1,10 +1,8 @@
 import styled from 'styled-components';
-import { formatCurrency } from '../../utils/helpers.js';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteCabin } from '../../services/apiCabins.js';
-import toast from 'react-hot-toast';
 import { useState } from 'react';
 import CreateCabinForm from './CreateCabinForm.jsx';
+import { formatCurrency } from '../../utils/helpers.js';
+import { useDeleteCabin } from './useDeleteCabin.js';
 
 const TableRow = styled.div`
   display: grid;
@@ -47,6 +45,7 @@ const Discount = styled.div`
 
 function CabinRow({ cabin }) {
   const [showForm, setShowForm] = useState(false);
+  const { isDeleting, deleteCabin } = useDeleteCabin();
 
   const {
     id: cabinId,
@@ -56,31 +55,6 @@ function CabinRow({ cabin }) {
     discount,
     image,
   } = cabin;
-
-  // To use Query Client we use useQueryClient()
-  // This is used to invalidate queries and refetch data
-  const queryClient = useQueryClient();
-
-  // Delete Cabins usign useMutation()
-  const { isLoading: isDeleting, mutate } = useMutation({
-    mutationFn: (id) => deleteCabin(id),
-
-    // Optionally, you can add a success message or refetch the cabins
-    onSuccess: () => {
-      // Invalidate the 'cabins' query to refetch the data
-      queryClient.invalidateQueries({
-        // Data to invalidate using queryKey
-        queryKey: ['cabins'],
-      });
-
-      // Optionally, you can show a success message
-      toast.success('Cabin deleted successfully');
-    },
-    onError: (error) => {
-      // Handle error case
-      toast.error(`${error.message}`);
-    },
-  });
 
   return (
     <>
@@ -96,7 +70,7 @@ function CabinRow({ cabin }) {
         )}
         <div>
           <button onClick={() => setShowForm((show) => !show)}>Edit</button>
-          <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
+          <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
             Delete
           </button>
         </div>

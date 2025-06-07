@@ -1,5 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import Input from '../../ui/Input';
@@ -7,9 +6,10 @@ import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
-import { useForm } from 'react-hook-form';
-import { createEditCabin } from '../../services/apiCabins.js';
 import FormRow from '../../pages/FOrmRow.jsx';
+
+import { useCreateCabin } from './useCreateCabin.js';
+import { useEditCabin } from './useEditCabin.js';
 
 const Error = styled.span`
   font-size: 1.4rem;
@@ -17,6 +17,14 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm({ cabinToEdit = {} }) {
+  // Import the custom hook for creating cabins
+  const { isCreating, createCabin } = useCreateCabin();
+
+  // Import the custom hook for editing cabins
+  const { isEditing, editCabin } = useEditCabin();
+
+  const isWorking = isCreating || isEditing;
+
   // Retrieve the cabin ID and values from the cabinToEdit prop
   const { id: editId, ...editValues } = cabinToEdit;
 
@@ -28,9 +36,6 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   // Log the editValues to ensure they are correct
   console.log('editValues:', editValues);
 
-  // access queryClient to manage the cache and invalidate queries
-  const queryClient = useQueryClient();
-
   const { register, handleSubmit, reset, getValues, formState } = useForm({
     // Use editValues if editing, otherwise use empty object
     defaultValues: isEditSession ? editValues : {},
@@ -40,44 +45,6 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   const { errors } = formState;
   // console.log(errors);
 
-  // Deleting a cabin
-  const { mutate: createCabin, isLoading: isCreating } = useMutation({
-    mutationFn: (id) => createEditCabin(id),
-    onSuccess: () => {
-      toast.success('New Cabin created successfully!');
-
-      // Invalidate the 'cabins' query to refetch the data after new cabin is added
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
-
-      // Reset the form after successful submission
-      reset();
-    },
-    onError: (error) => {
-      toast.error(`Cabin could not be created: ${error.message}`);
-    },
-  });
-
-  // Editing a cabin
-  const { mutate: editCabin, isLoading: isEditing } = useMutation({
-    mutationFn: ({ newCabinData, id }) => {
-      createEditCabin(newCabinData, id);
-    },
-    onSuccess: () => {
-      toast.success(' Cabin successfully edited!');
-
-      // Invalidate the 'cabins' query to refetch the data after new cabin is added
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
-
-      // Reset the form after successful submission
-      reset();
-    },
-    onError: (error) => {
-      toast.error(`Cabin could not be created: ${error.message}`);
-    },
-  });
-
-  const isWorking = isCreating || isEditing;
-
   // onSubmit function to handle form submission and pass data to mutation for cabin creation
   const onSubmit = function (data) {
     // console.log(data);
@@ -85,13 +52,31 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     const image = typeof data.image === 'string' ? data.image : data.image[0];
 
     if (isEditSession) {
-      editCabin({
-        newCabinData: { ...data, image },
-        id: editId,
-      });
+      editCabin(
+        {
+          newCabinData: { ...data, image },
+          id: editId,
+        },
+        {
+          onSuccess: (data) => {
+            // console.log(data);
+            // Reset the form after successful submission
+            reset();
+          },
+        },
+      );
     } else {
       // Assuming image is a FileList, we take the first file
-      createCabin({ ...data, image });
+      createCabin(
+        { ...data, image },
+        {
+          onSuccess: (data) => {
+            // console.log(data);
+            // Reset the form after successful submission
+            reset();
+          },
+        },
+      );
     }
   };
 
@@ -175,6 +160,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           type='number'
           id='description'
           defaultValue=''
+          disabled={isWorking}
           {...register('description', {
             required: 'This Field is required',
           })}
