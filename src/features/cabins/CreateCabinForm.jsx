@@ -9,8 +9,9 @@ import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCabin } from '../../services/apiCabins.js';
 import toast from 'react-hot-toast';
+import FormRow from '../../pages/FOrmRow.jsx';
 
-const FormRow = styled.div`
+const FormRow2 = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 24rem 1fr 1.2fr;
@@ -48,7 +49,11 @@ const Error = styled.span`
 
 function CreateCabinForm() {
   const queryClient = useQueryClient();
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, getValues, formState } = useForm();
+
+  // To get errors out of the Forma dn display in UI
+  const { errors } = formState;
+  // console.log(errors);
 
   const { isLoading: isCreating, mutate } = useMutation({
     mutationFn: (id) => createCabin(id),
@@ -71,45 +76,89 @@ function CreateCabinForm() {
     mutate(data);
   };
 
+  const onError = function (errors) {
+    // Handle form validation errors
+    console.error('Form submission errors:', errors);
+    // toast.error('Please fill in all required fields correctly.');
+  };
+
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
-      <FormRow>
-        <Label htmlFor='name'>Cabin name</Label>
-        <Input type='text' id='name' {...register('name')} />
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+      <FormRow label='Name' error={errors?.name?.message}>
+        <Input
+          type='text'
+          id='name'
+          {...register('name', {
+            required: 'This Field is required',
+          })}
+        />
+        {errors?.name?.message && <Error>{errors.name.message}</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor='maxCapacity'>Maximum capacity</Label>
-        <Input type='number' id='maxCapacity' {...register('maxCapacity')} />
+      <FormRow label='Max Capacity' error={errors?.maxCapacity?.message}>
+        <Input
+          type='number'
+          id='maxCapacity'
+          {...register('maxCapacity', {
+            required: 'This Field is required',
+            min: {
+              value: 1,
+              message: 'Minimum capacity must be at least 1',
+            },
+          })}
+        />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor='regularPrice'>Regular price</Label>
-        <Input type='number' id='regularPrice' {...register('regularPrice')} />
+      <FormRow label='Regular Price' error={errors?.regularPrice?.message}>
+        <Input
+          type='number'
+          id='regularPrice'
+          {...register('regularPrice', {
+            required: 'This Field is required',
+            min: {
+              value: 100,
+              message: 'Minimum price must be at least 100',
+            },
+          })}
+        />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor='discount'>Discount</Label>
+      <FormRow label='Discount' error={errors?.discount?.message}>
         <Input
           type='number'
           id='discount'
           defaultValue={0}
-          {...register('discount')}
+          {...register('discount', {
+            required: 'This Field is required',
+            validate: (value) => {
+              // getValues is a function from react-hook-form to get the current value of a field
+              const regularPrice = getValues('regularPrice');
+              if (value < 0) {
+                return 'Discount cannot be negative';
+              } else if (value >= regularPrice) {
+                return 'Discount should be less than the regular price';
+              }
+              return true;
+            },
+          })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor='description'>Description for website</Label>
+      <FormRow
+        label='Description for Website'
+        error={errors?.description?.message}
+      >
         <Textarea
           type='number'
           id='description'
           defaultValue=''
-          {...register('description')}
+          {...register('description', {
+            required: 'This Field is required',
+          })}
         />
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor='image'>Cabin photo</Label>
+      <FormRow label='Cabin Photo'>
         <FileInput id='image' accept='image/*' />
       </FormRow>
 
