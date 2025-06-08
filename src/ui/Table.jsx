@@ -93,7 +93,7 @@ function Body({ data, render }) {
   return <StyledBody>{data.map(render)}</StyledBody>;
 }
 
-Table.Header = Header;
+Table.Header = Header; 
 Table.Body = Body;
 Table.Row = Row;
 Table.Footer = Footer;
