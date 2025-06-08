@@ -6,28 +6,30 @@ import CreateTable from './CabinTable.jsx';
 // Implementing With Compound Component
 function AddCabin() {
   return (
-    <Modal>
-      {/* Component to open Modal Button
-       */}
-      <Modal.Open opens='cabin-form'>
-        {/* Here we want the user to be able to pass in the Button itself */}
-        <Button>Add new cabin</Button>
-      </Modal.Open>
-      {/* Modal Window */}
-      <Modal.Window name='cabin-form'>
-        {/* Content */}
-        <CreateCabinForm />
-      </Modal.Window>
+    <div>
+      <Modal>
+        {/* Component to open Modal Button
+         */}
+        <Modal.Open opens='cabin-form'>
+          {/* Here we want the user to be able to pass in the Button itself */}
+          <Button>Add new cabin</Button>
+        </Modal.Open>
+        {/* Modal Window */}
+        <Modal.Window name='cabin-form'>
+          {/* Content */}
+          <CreateCabinForm />
+        </Modal.Window>
 
-      {/* We can very easily add another <Modal.Open></Modal.Open> and window just copy paste the code with different props */}
+        {/* We can very easily add another <Modal.Open></Modal.Open> and window just copy paste the code with different props */}
 
-      <Modal.Open opens='table'>
+        {/* <Modal.Open opens='table'>
         <Button>Show Table</Button>
-      </Modal.Open>
-      <Modal.Window name='table'>
+        </Modal.Open>
+        <Modal.Window name='table'>
         <CreateTable />
-      </Modal.Window>
-    </Modal>
+        </Modal.Window> */}
+      </Modal>
+    </div>
   );
 }
 
