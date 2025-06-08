@@ -1,15 +1,15 @@
 import Heading from '../ui/Heading.jsx';
 import Row from '../ui/Row.jsx';
 import BookingTable from '../features/bookings/BookingTable.jsx';
+import BookingTableOperations from '../features/bookings/BookingTableOperations.jsx';
 
 function Bookings() {
   return (
     <>
       <Row type='horizontal'>
         <Heading as='h1'>All bookings</Heading>
-        <p> Test</p>
-      </Row>
-
+        <BookingTableOperations />
+      </Row> 
       <BookingTable />
     </>
   );
