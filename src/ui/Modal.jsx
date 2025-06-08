@@ -1,8 +1,8 @@
-import { cloneElement, createContext, useContext, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { HiXMark } from 'react-icons/hi2';
-import styled from 'styled-components';
-import { useOutsideClick } from '../hooks/useOutsideClick';
+import { cloneElement, createContext, useContext, useState } from "react";
+import { createPortal } from "react-dom";
+import { HiXMark } from "react-icons/hi2";
+import styled from "styled-components";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -53,42 +53,31 @@ const Button = styled.button`
   }
 `;
 
-// Implementing Compound Component
-// 1. Create a new Component
 const ModalContext = createContext();
 
-//2. Create the parent component
 function Modal({ children }) {
-  const [openName, setOpenName] = useState('');
+  const [openName, setOpenName] = useState("");
 
-  const close = () => setOpenName('');
+  const close = () => setOpenName("");
   const open = setOpenName;
 
-  // Render
   return (
-    <ModalContext.Provider value={{ openName, open, close }}>
+    <ModalContext.Provider value={{ openName, close, open }}>
       {children}
     </ModalContext.Provider>
   );
 }
 
-// Button
 function Open({ children, opens: opensWindowName }) {
   const { open } = useContext(ModalContext);
 
-  // Using Clone Element of React
-  return cloneElement(children, {
-    onClick: () => open(opensWindowName),
-  });
+  return cloneElement(children, { onClick: () => open(opensWindowName) });
 }
 
 function Window({ children, name }) {
   const { openName, close } = useContext(ModalContext);
-
-  // Custom Hook to handle outside click
   const ref = useOutsideClick(close);
 
-  // If the name does not match the openName, do not render the modal
   if (name !== openName) return null;
 
   return createPortal(
@@ -97,12 +86,11 @@ function Window({ children, name }) {
         <Button onClick={close}>
           <HiXMark />
         </Button>
+
         <div>{cloneElement(children, { onCloseModal: close })}</div>
       </StyledModal>
     </Overlay>,
-
-    // This way body element is the parent element of the Modal we want to render
-    document.body,
+    document.body
   );
 }
 
