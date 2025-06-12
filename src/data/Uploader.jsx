@@ -7,6 +7,18 @@ import { subtractDates } from '../utils/helpers';
 import { bookings } from './data-bookings';
 import { cabins } from './data-cabins';
 import { guests } from './data-guests';
+import styled from 'styled-components';
+
+const StyledUploader = styled.div`
+  margin-top: auto;
+  background-color: var(--color-silver-100);
+  padding: 8px;
+  border-radius: 5px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
 
 // const originalSettings = {
 //   minBookingLength: 3,
@@ -126,18 +138,7 @@ function Uploader() {
   }
 
   return (
-    <div
-      style={{
-        marginTop: 'auto',
-        backgroundColor: '#e0e7ff',
-        padding: '8px',
-        borderRadius: '5px',
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-      }}
-    >
+    <StyledUploader>
       <h3>SAMPLE DATA</h3>
 
       <Button onClick={uploadAll} disabled={isLoading}>
@@ -147,7 +148,7 @@ function Uploader() {
       <Button onClick={uploadBookings} disabled={isLoading}>
         Upload bookings ONLY
       </Button>
-    </div>
+    </StyledUploader>
   );
 }
 
